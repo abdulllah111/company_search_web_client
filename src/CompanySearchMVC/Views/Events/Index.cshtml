@@ -1,0 +1,50 @@
+@model CompanySearchMVC.Models.Dto.EventsVm
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    string strTitle = "Events";
+    ViewBag.Title = strTitle;
+}
+
+
+<div>
+
+    <br />
+    <div class="div-box">
+        <a asp-controller="Events" asp-action="Create">Create event</a>
+    </div>
+    <br />
+    @if (Model != null && Model!.Events!.Any())
+    {
+        <div>
+            @foreach (CompanySearchMVC.Models.Dto.EventDto entity in Model!.Events!)
+            {
+                <div>
+                    @* <a asp-area="Admin" asp-controller="Pages" asp-action="Edit"
+            asp-route-id="@entity.PageID">редактировать</a> *@
+                    |
+                    @* <form style="display: inline-block;" id="form-@entity.PageID" asp-area="Admin" asp-controller="Pages"
+            asp-action="Delete" method="post">
+            <input type="hidden" name="id" value="@entity.PageID">
+            <input type="hidden" name="chapterid" value="@Model.Chapter.ChapterID">
+            <a href="#" onclick="document.getElementById('form-@entity.PageID').submit();">удалить</a>
+            </form>
+            |
+            <a asp-area="Admin" asp-controller="Pages" asp-action="Details" asp-route-id="@entity.PageID">
+            @($"{entity.Title}")
+            </a> *@
+                    <div class="box">
+                        <article>
+                            <h3>@entity.Name</h3>
+                            <p>@entity.StartDate.ToString()</p>
+                            <ul class="actions">
+                                <li><a asp-controller="Events" asp-action="Details" asp-route-id="@entity.Id"
+                                        class="button">Больше</a></li>
+                            </ul>
+                        </article>
+                    </div>
+                </div>
+
+            }
+        </div>
+    }
+</div>

@@ -10,8 +10,8 @@ namespace CompanySearchMVC.Services.IServices
     {
         Task<T> GetAllEventsAsync<T>();
         Task<T> GetEventByIdAsync<T>(Guid id);
-        Task<T> CreateEventAsync<T>(EventDto eventDto);
-        Task<T> UpdateEventAsync<T>(EventDto eventDto);
+        Task<T> CreateEventAsync<T>(CreateEventDto eventDto);
+        Task<T> UpdateEventAsync<T>(UpdateEventDto eventDto);
         Task<T> DeleteEventAsync<T>(Guid id);
         Task<T> GetAllEventsByUserIdAsync<T>(Guid id);
         Task<T> GetAllEventsByCategoryIdAsync<T>(Guid id);

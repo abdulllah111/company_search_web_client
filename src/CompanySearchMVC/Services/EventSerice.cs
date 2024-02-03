@@ -25,7 +25,7 @@ namespace CompanySearchMVC.Services
             _basePath = "/api/event";
         }
 
-        public Task<T> CreateEventAsync<T>(EventDto eventDto)
+        public Task<T> CreateEventAsync<T>(CreateEventDto eventDto)
         {
             return SendAsync<T>(new ApiRequest()
             {
@@ -62,7 +62,7 @@ namespace CompanySearchMVC.Services
             });
         }
 
-        public Task<T> UpdateEventAsync<T>(EventDto eventDto)
+        public Task<T> UpdateEventAsync<T>(UpdateEventDto eventDto)
         {
             return SendAsync<T>(new ApiRequest()
             {
