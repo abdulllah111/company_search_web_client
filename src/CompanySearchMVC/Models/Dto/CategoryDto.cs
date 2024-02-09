@@ -2,6 +2,7 @@ namespace CompanySearchMVC.Models.Dto
 {
     public class CategoryDto
     {
+        public Guid? Id { get; set; }
         public Guid? CreatorId { get; set; }
         public required string Name { get; set; }
         public CategoryDto? ParentCategory { get; set; }

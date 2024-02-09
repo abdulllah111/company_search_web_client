@@ -2,28 +2,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CompanySearchMVC.Models;
 using CompanySearchMVC.Models.Dto;
 using CompanySearchMVC.Services;
 using CompanySearchMVC.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CompanySearchMVC.Controllers
 {
     public class EventsController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IMapper _mapper;
         private readonly IEventService _eventService;
-        public EventsController(ILogger<HomeController> logger, IEventService eventService)
+        private readonly ICategoryService _categoryService;
+        public EventsController(ILogger<HomeController> logger, IEventService eventService, ICategoryService categoryService, IMapper mapper)
         {
             _eventService = eventService;
+            _categoryService = categoryService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         // GET: ShelfsController
         public async Task<ActionResult> Index()
         {
-            var model = await _eventService.GetAllEventsAsync<EventDetailsVm>();
+            var model = await _eventService.GetAllEventsAsync<EventsVm>();
             return View(model);
         }
 
@@ -34,18 +40,31 @@ namespace CompanySearchMVC.Controllers
             return View(model);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var availableCategories = await _categoryService.GetAllCategoriesAsync<CategoriesVm>();
+            // ViewBag.AvailableCategories = availableCategories.Categories;
+            var model = new CreateEventVm();
+            model.AvailableCategories = availableCategories.Categories;
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateEventDto model)
+        public async Task<IActionResult> Create(CreateEventVm model)
         {
             if (ModelState.IsValid)
             {
-                var entity = await _eventService.CreateEventAsync<ApiResponse>(model);
-                return RedirectToAction(nameof(EventsController.Details), nameof(EventsController).CutController(), new { @Id = entity });
+                var availableCategories = await _categoryService.GetAllCategoriesAsync<CategoriesVm>();
+                model.EventCategories = availableCategories.Categories
+                .Where(c => model.SelectedCategories.Contains(c.Id))
+                .ToList();
+
+                var entity = _mapper.Map<CreateEventDto>(model);
+                var response = await _eventService.CreateEventAsync<CreateEventDto>(entity);
+                // return RedirectToAction(nameof(EventsController.Details), nameof(EventsController).CutController(), new { @Id = entity });
+                return RedirectToAction(nameof(EventsController.Index), nameof(EventsController).CutController());
+
+                // return View(model);
             }
             return View(model);
         }
